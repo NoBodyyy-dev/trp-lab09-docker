@@ -1,0 +1,13 @@
+@page "{id:int}"
+@model EditModel
+@{
+    ViewData["Title"] = $"Изменение предсказания № {Model.Id}";
+}
+<h1>Изменение предсказания № @Model.Id</h1>
+<form class="card" method="post">
+    <partial name="_PredictionForm" model="Model.Input" />
+    <div class="actions">
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <a class="btn" asp-page="Details" asp-route-id="@Model.Id">Отмена</a>
+    </div>
+</form>

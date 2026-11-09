@@ -1,0 +1,34 @@
+@page
+@model RandomModel
+@{
+    ViewData["Title"] = "Случайное предсказание";
+}
+<h1>Случайное предсказание</h1>
+
+<form class="card filters" method="get">
+    <div class="field">
+        <label for="sign">Знак зодиака</label>
+        <select id="sign" name="sign">
+            <option value="">любой</option>
+            @foreach (var sign in Catalogs.Signs)
+            {
+                <option value="@sign" selected="@(sign == Model.Sign)">@sign</option>
+            }
+        </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Получить</button>
+</form>
+
+<div class="card">
+    @if (Model.Prediction is { } p)
+    {
+        <p><span class="badge">@p.Sign</span> <span class="muted">· @p.Category · число @p.LuckyNumber</span></p>
+        <p class="quote">«@p.Text»</p>
+        <a asp-page="Details" asp-route-id="@p.Id">Предсказание № @p.Id</a>
+    }
+    else
+    {
+        <p class="muted">Для знака «@Model.Sign» в справочнике пока нет предсказаний —
+            <a asp-page="Create" asp-route-sign="@Model.Sign">добавить</a>.</p>
+    }
+</div>

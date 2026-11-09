@@ -1,0 +1,15 @@
+@page "{id:int}"
+@model DeleteModel
+@{
+    var p = Model.Prediction;
+    ViewData["Title"] = $"Удаление предсказания № {p.Id}";
+}
+<h1>Удалить предсказание № @p.Id?</h1>
+<form class="card" method="post">
+    <p class="quote">«@p.Text»</p>
+    <p><span class="badge">@p.Sign</span> <span class="muted">· @p.Category · число @p.LuckyNumber</span></p>
+    <div class="actions">
+        <button class="btn btn-danger" type="submit">Удалить</button>
+        <a class="btn" asp-page="Details" asp-route-id="@p.Id">Отмена</a>
+    </div>
+</form>

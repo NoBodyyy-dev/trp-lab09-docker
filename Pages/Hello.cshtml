@@ -1,0 +1,16 @@
+@page
+@model HelloModel
+@{
+    ViewData["Title"] = "Приветствие";
+}
+<h1>Приветствие</h1>
+<div class="card">
+    <p class="quote">@Model.HelloMessage</p>
+    <form method="get" class="filters">
+        <div class="field">
+            <label for="name">Имя</label>
+            <input id="name" name="name" value="@Model.UserName" />
+        </div>
+        <button class="btn btn-primary" type="submit">Поздороваться</button>
+    </form>
+</div>

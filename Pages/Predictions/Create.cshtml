@@ -1,0 +1,13 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Новое предсказание";
+}
+<h1>Новое предсказание</h1>
+<form class="card" method="post">
+    <partial name="_PredictionForm" model="Model.Input" />
+    <div class="actions">
+        <button class="btn btn-primary" type="submit">Добавить</button>
+        <a class="btn" asp-page="Index">Отмена</a>
+    </div>
+</form>

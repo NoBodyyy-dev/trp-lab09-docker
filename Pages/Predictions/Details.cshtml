@@ -1,0 +1,22 @@
+@page "{id:int}"
+@model DetailsModel
+@{
+    var p = Model.Prediction;
+    ViewData["Title"] = $"Предсказание № {p.Id}";
+}
+<h1>Предсказание № @p.Id</h1>
+<div class="card">
+    <p class="quote">«@p.Text»</p>
+    <dl>
+        <dt>Знак</dt><dd><span class="badge">@p.Sign</span></dd>
+        <dt>Категория</dt><dd>@p.Category</dd>
+        <dt>Счастливое число</dt><dd>@p.LuckyNumber</dd>
+        <dt>Создано</dt><dd>@p.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss")</dd>
+        <dt>Изменено</dt><dd>@(p.UpdatedAt?.ToString("dd.MM.yyyy HH:mm:ss") ?? "—")</dd>
+    </dl>
+    <div class="actions">
+        <a class="btn btn-primary" asp-page="Edit" asp-route-id="@p.Id">Изменить</a>
+        <a class="btn" asp-page="Delete" asp-route-id="@p.Id">Удалить</a>
+        <a class="btn" asp-page="Index">К списку</a>
+    </div>
+</div>

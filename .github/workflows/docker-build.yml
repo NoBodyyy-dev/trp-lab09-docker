@@ -1,0 +1,20 @@
+name: Docker Build Test
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Проверка кода из репозитория
+      uses: actions/checkout@v4
+
+    - name: Настройка Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Сборка Docker-образа в облаке GitHub
+      run: |
+        docker build -t test-app:latest .
+        echo "Образ собран!"

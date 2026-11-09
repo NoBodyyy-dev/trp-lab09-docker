@@ -1,0 +1,60 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Гороскоп";
+}
+<h1>Гороскоп по дате рождения</h1>
+
+<div class="card">
+    <p>Студент группы @StudentInfo.Group @StudentInfo.Name, номер зачётной книжки @StudentInfo.Id,
+        вариант @StudentInfo.Variant («Гороскоп»).</p>
+    <p class="muted">Пользовательский интерфейс на Razor Pages для логики и моделей из ЛР2–ЛР6:
+        гороскоп по дате, справочник предсказаний с CRUD-операциями, расчёт варианта.</p>
+</div>
+
+<div class="card">
+    <form method="get" class="filters">
+        <div class="field">
+            <label asp-for="Day">День</label>
+            <input asp-for="Day" size="4" inputmode="numeric" />
+        </div>
+        <div class="field">
+            <label asp-for="Month">Месяц</label>
+            <select asp-for="Month">
+                <option value="">—</option>
+                @for (int m = 1; m <= 12; m++)
+                {
+                    <option value="@m">@Horoscope.Russian.DateTimeFormat.MonthNames[m - 1]</option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Узнать</button>
+    </form>
+
+    @if (Model.Error is not null)
+    {
+        <div class="alert alert-error" style="margin-top:16px">@Model.Error</div>
+    }
+    else if (Model.Result is { } h)
+    {
+        <dl style="margin-top:16px">
+            <dt>Дата рождения</dt><dd>@h.Day.ToString("00").@h.Month.ToString("00")</dd>
+            <dt>Знак</dt><dd><span class="badge">@h.Sign</span></dd>
+            <dt>Гороскоп на</dt><dd>@h.Date.ToString("d MMMM yyyy", Horoscope.Russian)</dd>
+            <dt>Прогноз</dt><dd>@h.Forecast</dd>
+            <dt>Число дня</dt><dd>@h.LuckyNumber</dd>
+        </dl>
+
+        @if (Model.Prediction is { } p)
+        {
+            <p>Предсказание из справочника для знака «@h.Sign»:</p>
+            <p class="quote">«@p.Text»</p>
+            <a asp-page="/Predictions/Details" asp-route-id="@p.Id">Предсказание № @p.Id</a>
+        }
+        else
+        {
+            <p class="muted">Для знака «@h.Sign» в справочнике пока нет предсказаний —
+                <a asp-page="/Predictions/Create">добавить</a>.</p>
+        }
+    }
+</div>

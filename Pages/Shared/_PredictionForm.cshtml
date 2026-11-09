@@ -1,0 +1,50 @@
+@model PredictionInput
+
+<div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+<div class="field">
+    <label for="Input_Sign">Знак зодиака</label>
+    <select id="Input_Sign" name="Input.Sign" class="@ErrorClass("Input.Sign")">
+        <option value="">— выберите —</option>
+        @foreach (var sign in Catalogs.Signs)
+        {
+            <option value="@sign" selected="@(sign == Model.Sign)">@sign</option>
+        }
+    </select>
+    <span class="error">@Error("Input.Sign")</span>
+</div>
+
+<div class="field">
+    <label for="Input_Category">Категория</label>
+    <select id="Input_Category" name="Input.Category" class="@ErrorClass("Input.Category")">
+        <option value="">— выберите —</option>
+        @foreach (var category in Catalogs.Categories)
+        {
+            <option value="@category" selected="@(category == Model.Category)">@category</option>
+        }
+    </select>
+    <span class="error">@Error("Input.Category")</span>
+</div>
+
+<div class="field">
+    <label for="Input_Text">Текст (@PredictionValidator.TextMinLength–@PredictionValidator.TextMaxLength символов)</label>
+    <textarea id="Input_Text" name="Input.Text" maxlength="@PredictionValidator.TextMaxLength"
+              class="@ErrorClass("Input.Text")">@Model.Text</textarea>
+    <span class="error">@Error("Input.Text")</span>
+</div>
+
+<div class="field">
+    <label for="Input_LuckyNumber">Счастливое число (@PredictionValidator.LuckyNumberMin–@PredictionValidator.LuckyNumberMax)</label>
+    <input id="Input_LuckyNumber" name="Input.LuckyNumber" inputmode="numeric"
+           value="@(ViewData.ModelState["Input.LuckyNumber"]?.AttemptedValue ?? Model.LuckyNumber?.ToString())"
+           class="@ErrorClass("Input.LuckyNumber")" />
+    <span class="error">@Error("Input.LuckyNumber")</span>
+</div>
+
+@functions {
+    string? Error(string key) =>
+        ViewData.ModelState[key]?.Errors.FirstOrDefault()?.ErrorMessage;
+
+    string? ErrorClass(string key) =>
+        ViewData.ModelState[key]?.Errors.Count > 0 ? "input-validation-error" : null;
+}

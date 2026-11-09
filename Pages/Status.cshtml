@@ -1,0 +1,11 @@
+@page
+@{
+    int code = int.TryParse(Request.Query["code"], out int c) ? c : 404;
+    string title = code == 404 ? "Страница или запись не найдена" : $"Ошибка {code}";
+    ViewData["Title"] = title;
+}
+<h1>@title</h1>
+<div class="card">
+    <p class="muted">Код ответа: @code.</p>
+    <a class="btn" asp-page="/Predictions/Index">К списку предсказаний</a>
+</div>

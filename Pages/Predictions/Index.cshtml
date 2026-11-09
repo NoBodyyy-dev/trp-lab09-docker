@@ -1,0 +1,120 @@
+@page
+@model Lab07_RazorPages.Pages.Predictions.IndexModel
+@{
+    ViewData["Title"] = "Предсказания";
+    var query = Model.Query;
+    var result = Model.Result;
+}
+<h1>Предсказания</h1>
+
+@if (Model.Errors.Count > 0)
+{
+    <div class="alert alert-error">
+        <ul>
+            @foreach (var message in Model.Errors.Values.SelectMany(m => m))
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
+
+<form class="card filters" method="get">
+    <div class="field">
+        <label for="sign">Знак</label>
+        <select id="sign" name="sign">
+            <option value="">все</option>
+            @foreach (var sign in Catalogs.Signs)
+            {
+                <option value="@sign" selected="@(sign == query.Sign)">@sign</option>
+            }
+        </select>
+    </div>
+    <div class="field">
+        <label for="category">Категория</label>
+        <select id="category" name="category">
+            <option value="">все</option>
+            @foreach (var category in Catalogs.Categories)
+            {
+                <option value="@category" selected="@(category == query.Category)">@category</option>
+            }
+        </select>
+    </div>
+    <div class="field">
+        <label for="search">Поиск по тексту</label>
+        <input id="search" name="search" value="@query.Search" />
+    </div>
+    <div class="field">
+        <label for="sort">Сортировка</label>
+        <select id="sort" name="sort">
+            @foreach (var field in Catalogs.SortFields)
+            {
+                <option value="@field" selected="@(field == query.Sort)">@field</option>
+            }
+        </select>
+    </div>
+    <div class="field checkbox">
+        <input id="desc" name="desc" type="checkbox" value="true" checked="@query.Desc" />
+        <label for="desc">по убыванию</label>
+    </div>
+    <div class="field">
+        <label for="pageSize">На странице</label>
+        <input id="pageSize" name="pageSize" value="@query.PageSize" size="3" inputmode="numeric" />
+    </div>
+    <button class="btn btn-primary" type="submit">Показать</button>
+    <a class="btn" asp-page="Index">Сбросить</a>
+</form>
+
+<div class="card">
+    <div class="actions" style="justify-content:space-between;margin-bottom:12px">
+        <span class="muted">Найдено записей: @result.TotalItems</span>
+        <a class="btn btn-primary" asp-page="Create">Добавить предсказание</a>
+    </div>
+
+    @if (result.Items.Count == 0)
+    {
+        <p class="muted">Записей не найдено.</p>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr><th>№</th><th>Знак</th><th>Категория</th><th>Текст</th><th>Число</th><th></th></tr>
+                </thead>
+                <tbody>
+                @foreach (var p in result.Items)
+                {
+                    <tr>
+                        <td class="num">@p.Id</td>
+                        <td><span class="badge">@p.Sign</span></td>
+                        <td>@p.Category</td>
+                        <td>@p.Text</td>
+                        <td class="num">@p.LuckyNumber</td>
+                        <td class="num">
+                            <a asp-page="Details" asp-route-id="@p.Id">открыть</a> ·
+                            <a asp-page="Edit" asp-route-id="@p.Id">изменить</a> ·
+                            <a asp-page="Delete" asp-route-id="@p.Id">удалить</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (result.TotalPages > 1)
+    {
+        <div class="pager">
+            @if (result.Page > 1)
+            {
+                <a class="btn" asp-page="Index" asp-all-route-data="Model.RouteFor(result.Page - 1)">← Назад</a>
+            }
+            <span class="current">Страница @result.Page из @result.TotalPages</span>
+            @if (result.Page < result.TotalPages)
+            {
+                <a class="btn" asp-page="Index" asp-all-route-data="Model.RouteFor(result.Page + 1)">Вперёд →</a>
+            }
+        </div>
+    }
+</div>
